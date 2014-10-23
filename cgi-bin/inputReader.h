@@ -8,6 +8,7 @@
 char * getKeyVal(char * dest, char * key, pair * keyMap, int mapSize){
 	int i;
 	for(i = 0; i<mapSize; i++){
+		//printf("In getkeyval %d: %s<br>",i, keyMap[i].key);
 		if(!strcmp(keyMap[i].key, key)){
 			return strcpy(dest,keyMap[i].value);
 		}

@@ -7,7 +7,7 @@
 #include "inputReader.h"
 #include "myutility.h"
 
-pair keyMap[2000];
+pair keyMap[NUM_SLOTS];
 
 void loadSlotData();
 
@@ -16,10 +16,7 @@ int main(){
 	char filepath[2000] = {};
 	strcpy(filepath, HTMLPATH);
 	strcat(filepath, "/load.html");
-
-	strcpy(keyMap[0].key, "state1");
-	strcpy(keyMap[0].value, "this is state 1");
-
+	
 	loadSlotData();
 
 	FILE * fp = fopen(filepath, "r");
@@ -28,7 +25,7 @@ int main(){
 		printf("Error opening file: %s\n", filepath);
 	} else {
 
-		readInput(fp, stdout, keyMap, 1);
+		readInput(fp, stdout, keyMap, NUM_SLOTS);
 	}
 
 	fclose(fp);
@@ -66,8 +63,6 @@ void loadSlotData(){
 		strcpy(mapVal, sqlite3_column_text(result, 1));
 		strcat(mapVal, ",");
 		strcat(mapVal, itoa(sqlite3_column_int(result, 2), itoatemp, 10));
-
-		printf("<br/>(%s:%s)\n", mapKey, mapVal);
 
 		strcpy(keyMap[i].key, mapKey);
 		strcpy(keyMap[i].value, mapVal);

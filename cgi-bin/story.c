@@ -112,7 +112,9 @@ int main(){
 		strcat(keyMap[3].value, ",");
 		itoa(d_index+1, keyMap[3].value+strlen(keyMap[3].value), 10);
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
-			strcpy(keyMap[3].value, keyMap[0].value);
+			strcpy(keyMap[3].value, usr);
+			strcat(keyMap[3].value, ":");
+			strcat(keyMap[3].value, keyMap[0].value);
 		}
 		for(i = 0; i<keyMapSize; i++){
 			printf("<br/>%s:%s",keyMap[i].key, keyMap[i].value);
@@ -122,6 +124,8 @@ int main(){
 		strcpy(keyMap[4].key, "choiceList");
 		for(i = 0; i<numChoices; i++){
 			char radioElement[2000] = "<input type='radio' name='state' value='";
+			strcat(radioElement, usr);
+			strcat(radioElement, ":");
 			strcat(radioElement, choices[i].branch);
 			strcat(radioElement, ",0' />");
 			strcat(radioElement, choices[i].speech);

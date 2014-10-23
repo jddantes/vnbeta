@@ -15,7 +15,7 @@ typedef struct{
 } dialogue;
 
 typedef struct{
-	char choice[100][2000] = {};
+	char choice[100][2000];
 	int numChoices;
 } choiceList;
 

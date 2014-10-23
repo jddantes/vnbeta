@@ -9,37 +9,6 @@ B:Hi
 A:What're you doing?
 [/d]
 
-[c]
-c1:Eating
-c2:Nothing much
-c3:None of your business!
-[/c]
-
-[c1]
-[d]
-A:Nice.
-[/d]
-
 [b]
-999
+1.ch
 [/b]
-[/c1]
-
-[c2]
-[d]
-A:Let's watch a movie!
-B:Alright
-[/d]
-[b]
-2
-[/b]
-[/c2]
-
-[c3]
-[d]
-A:...Okay.
-[/d]
-[b]
-4
-[/b]
-[/c3]

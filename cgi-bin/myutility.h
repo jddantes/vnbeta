@@ -93,6 +93,18 @@ int prepare(sqlite3 * conn, const char * query, int numBytes, sqlite3_stmt ** re
 	return error;
 }
 
+/*
+	sqlite3_open with error check
+*/
+int sql_open(const char * dbpath, sqlite3 ** conn){
+	int error = sqlite3_open(dbpath, conn);
+	if(error){
+		term("could not open database");
+	}
+	return error;
+}
+
+
 char * mgets(char * str, int num, FILE * stream){
 	char * ret = fgets(str, num, stream);
 	if(str[strlen(str)-1] == '\n'){

@@ -60,15 +60,21 @@ int main(){
 		return 0;
 		// Get save data from database
 
-		printf("Buffer:%s", buffer);
-		char state[2000];
-		sscanf(buffer, "state=%s", state);
+		sqlite3 * conn;
+		sqlite3_stmt * result;
+		int error = 0;
+		const char * tail;
+
+		sql_open(dbpath, &conn);
+		prepare(conn, "SELECT * FROM slots;", 2000, &result, &tail);
+		sqlite3_step(result);
+
+		int d_index = sqlite3_column_int(result,2);
+		char sceneName[2000];
+		strcpy(scenName, sqlite3_column_text(result, 1));
 		char scene[2000] = SCENEPATH;
 		strcat(scene, "/");
-		char d_str[2000] = {};
-		strcat(scene, strtok(state, ","));
-		strcpy(d_str, strtok(NULL, ", "));
-		int d_index = atoi(d_str);
+		strcat(scene, sceneName);
 
 		char sceneName[2000];
 		strcpy(sceneName, scene+strlen(SCENEPATH) + 1);

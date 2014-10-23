@@ -9,6 +9,7 @@
 
 void loadScene(FILE * fp);
 void handle(char * action, char * buffer);
+void credits();
 
 dialogue dialogues[1000] = {};
 choice choices[100] = {};
@@ -57,6 +58,11 @@ int main(){
 
 		char sceneName[2000];
 		strcpy(sceneName, scene+strlen(SCENEPATH) + 1);
+
+		if(!strcmp(sceneName, "end.vn")){
+			credits();
+			return 0;
+		}
 
 		FILE * fp = mopen(scene, "r");
 
@@ -170,4 +176,9 @@ void handle(char * action, char * buffer){
 
 
  
+}
+
+void credits(){
+	printf("<html><body>You've reached the end!</body></html>");
+
 }

@@ -92,3 +92,9 @@ int prepare(sqlite3 * conn, const char * query, int numBytes, sqlite3_stmt ** re
 
 	return error;
 }
+
+char * mgets(char * str, int num, FILE * stream){
+	char * ret = fgets(str, num, stream);
+	str[strlen(str)-1] = 0;
+	return ret;
+}

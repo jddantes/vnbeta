@@ -15,8 +15,8 @@ typedef struct{
 } dialogue;
 
 typedef struct{
-	char choice[100][2000];
-	int numChoices;
-} choiceList;
+	char branch[2000];
+	char speech[2000];
+} choice;
 
 #endif

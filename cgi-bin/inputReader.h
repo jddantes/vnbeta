@@ -64,7 +64,7 @@ void readInput(FILE * fp, FILE * output, pair * keyMap, int mapSize){
 							getKeyVal(retVal, trimmed, keyMap, mapSize);
 							printf("%s", retVal);
 							if(!retVal[0]){ // Not found in keyMap
-								printf("%s%%}", buffer);
+								// printf("%s%%}", buffer);
 							}
 
 							bufferIndex = 0;

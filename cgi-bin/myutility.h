@@ -1,7 +1,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sqlite3.h>
-
+#include "mytypes.h"
 /*
 	originally error or abort, but both are commonly used so I went with terminate, or term for short
 */
@@ -111,3 +111,32 @@ FILE * mopen(const char * filename, const char * mode){
 		return ret;
 	}
 }
+
+void split(char * buffer, char * a, char * b, char * delim){
+	char * pch = strstr(buffer, delim);
+	strncpy(a, buffer, pch-buffer);
+	strcpy(b, pch+1);
+
+}
+
+void processPostData(char * buffer, pair * keyMap){
+	char str[strlen(buffer)];
+	int i = 0;
+	char * pch = strtok(buffer, "&");
+
+	while(pch != NULL){
+
+		char key[2000];
+		char value[2000];
+
+		split(pch, key, value, "=");
+		strcpy(keyMap[i].key, key);
+		strcpy(keyMap[i].value, value);
+
+		pch = strtok(NULL, "&");
+
+		i++;
+	}
+
+}
+

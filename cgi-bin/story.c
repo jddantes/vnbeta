@@ -11,18 +11,21 @@ void loadScene(FILE * fp);
 void handle(char * action, char * buffer);
 
 dialogue dialogues[1000] = {};
-choiceList choices[100] = {};
+choice choices[100] = {};
 int numDialogues = 0;
 int numChoices = 0;
 
+pair postData[100];
+int numPostData = 0;
 pair keyMap[100];
-int keyMapSize = 4;
+int keyMapSize = 5;
 /*
 	Contents of keyMap:
 	0 nextScene
 	1 speaker
 	2 speech
 	3 state
+	4 choiceList
 */
 
 int main(){
@@ -41,6 +44,7 @@ int main(){
 	} else {
 		fgets(buffer, 2000, stdin);
 		decode(buffer);
+		processPostData(buffer, postData);
 		printf("Buffer:%s", buffer);
 		char state[2000];
 		sscanf(buffer, "state=%s", state);
@@ -51,23 +55,25 @@ int main(){
 		strcpy(d_str, strtok(NULL, ", "));
 		int d_index = atoi(d_str);
 
+		char sceneName[2000];
+		strcpy(sceneName, scene+strlen(SCENEPATH) + 1);
+
 		FILE * fp = mopen(scene, "r");
 
 		loadScene(fp);
 
 		fclose(fp);
 
+
+		// Process normal dialogues
 		int i;
-		for(i = 0; i<numDialogues; i++){
-			printf("%s:%s<br>", dialogues[i].speaker, dialogues[i].speech);
-		}
 
 		strcpy(keyMap[1].key, "speaker");
 		strcpy(keyMap[1].value, dialogues[d_index].speaker);
 		strcpy(keyMap[2].key, "speech");
 		strcpy(keyMap[2].value, dialogues[d_index].speech);
 		strcpy(keyMap[3].key, "state");
-		strcpy(keyMap[3].value, scene + strlen(SCENEPATH) + 1); // Just take the scene's filename, not the whole path
+		strcpy(keyMap[3].value, sceneName); 
 		strcat(keyMap[3].value, ",");
 		itoa(d_index+1, keyMap[3].value+strlen(keyMap[3].value), 10);
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
@@ -78,6 +84,26 @@ int main(){
 			printf("<br/>%s:%s",keyMap[i].key, keyMap[i].value);
 		}
 
+		// Process choices 
+		strcpy(keyMap[4].key, "choiceList");
+		for(i = 0; i<numChoices; i++){
+			char radioElement[2000] = "<input type='radio' name='state' value='";
+			strcat(radioElement, choices[i].branch);
+			strcat(radioElement, ",0' />");
+			strcat(radioElement, choices[i].speech);
+			strcat(radioElement, "</br>\n");
+
+			strcat(keyMap[4].value, radioElement);
+		}
+
+
+		printf("<br>Printing keyMap: <br>");
+		for(i = 0; i<keyMapSize; i++){
+			printf("%s:%s<br>", keyMap[i].key, keyMap[i].value);
+		}
+		printf("----<br>");
+
+		// Render HTML
 		char htmlpath[2000] = HTMLPATH;
 		strcat(htmlpath, "/story.html");
 		fp = mopen(htmlpath, "r");
@@ -130,15 +156,16 @@ void handle(char * action, char * buffer){
 	if(!strcmp(action, "#")){ // Comment, do nothing
 
 	} else if (!strcmp(action, "d") ){ // Dialogue, one per line, in format speaker:speech
-		char * pch = strstr(buffer, ":");
-		strncpy(dialogues[numDialogues].speaker, buffer, pch-buffer);
-		strcpy(dialogues[numDialogues].speech, pch+1);
+		split(buffer, dialogues[numDialogues].speaker, dialogues[numDialogues].speech, ":");
 		numDialogues++;
 	} else if(!strcmp(action, "b")) { // Branch to scene
 		printf("<br>branch: %s<br>", buffer);
 		strcpy(keyMap[0].key, "nextScene");
 		strcpy(keyMap[0].value, buffer);
 		strcat(keyMap[0].value, ",0");
+	} else if(!strcmp(action, "c")){
+		split(buffer, choices[numChoices].branch, choices[numChoices].speech, ":");
+		numChoices++;
 	}
 
 

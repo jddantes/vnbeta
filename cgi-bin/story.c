@@ -29,6 +29,8 @@ int keyMapSize = 5;
 	4 choiceList
 */
 
+int i;
+
 int main(){
 	
 	printf("Content-type:text/html\n\n");
@@ -45,7 +47,19 @@ int main(){
 	} else {
 		fgets(buffer, 2000, stdin);
 		decode(buffer);
-		processPostData(buffer, postData);
+		processPostData(buffer, postData, &numPostData);
+
+		char usr[2000];
+		int usr_id = atoi(getKeyVal(usr, "state", postData, numPostData));
+
+		printf("Printing postData<br>");
+		for(i = 0; i<numPostData; i++){
+			printf("%s:%s<br>", postData[i].key, postData[i].value);
+		}
+		printf("-----<br>");
+		return 0;
+		// Get save data from database
+
 		printf("Buffer:%s", buffer);
 		char state[2000];
 		sscanf(buffer, "state=%s", state);
@@ -72,7 +86,7 @@ int main(){
 
 
 		// Process normal dialogues
-		int i;
+		
 
 		strcpy(keyMap[1].key, "speaker");
 		strcpy(keyMap[1].value, dialogues[d_index].speaker);

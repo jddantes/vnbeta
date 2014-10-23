@@ -119,7 +119,7 @@ void split(char * buffer, char * a, char * b, char * delim){
 
 }
 
-void processPostData(char * buffer, pair * keyMap){
+void processPostData(char * buffer, pair * keyMap, int * numPostData){
 	char str[strlen(buffer)];
 	int i = 0;
 	char * pch = strtok(buffer, "&");
@@ -137,6 +137,8 @@ void processPostData(char * buffer, pair * keyMap){
 
 		i++;
 	}
+
+	*numPostData = i;
 
 }
 

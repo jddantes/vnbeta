@@ -60,7 +60,7 @@ void loadSlotData(){
 		strcat(mapVal, itoa(sqlite3_column_int(result, 2), itoatemp, 10));
 
 		strcpy(keyMap[i].key, mapKey);
-		strcpy(keyMap[i].value, mapVal);
+		strcpy(keyMap[i].value, itoa(i+1, itoatemp, 10)); // Formerly mapVal instaed of itoa - using usr_id.
 		i++;
 	}
 

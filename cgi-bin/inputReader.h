@@ -23,58 +23,74 @@ void readInput(FILE * fp, FILE * output, pair * keyMap, int mapSize){
 	int bufferIndex = 0;
 	char c;
 
-	while(fscanf(fp, "%c", &c) != EOF){
-
+	while(fscanf(fp, "%c", &c)!=EOF){
 		if(c=='{'){
+			buffer[bufferIndex] = c;
+			bufferIndex++;
+
 			fscanf(fp, "%c", &c);
 			if(c == '%'){
 
+				buffer[bufferIndex] = c;
+				bufferIndex++;
+
 				while(fscanf(fp, "%c", &c)!=EOF){
-					if(bufferIndex >= bufferSize){
+
+					if(bufferIndex>=bufferSize){
+						buffer[bufferIndex] = 0;
 						fprintf(output, "%s", buffer);
-						buffer[0] = 0;
 						bufferIndex = 0;
+						buffer[0] = 0;
 						break;
 					}
 
-					if(c == '%'){
+					buffer[bufferIndex] = c;
+					bufferIndex++;
+
+					if(c == '%'){ // Possible end
 						fscanf(fp, "%c", &c);
-						if(c == '}'){
-							buffer[bufferIndex] = 0;
-							char trimmed[bufferSize];
-							trimmed[0] = 0;
-							sscanf(buffer, "{%% s %%}", trimmed);
-
-							char stringVal[bufferSize];
-							stringVal[0] = 0;
-							getKeyVal(stringVal, trimmed, keyMap, mapSize);
-							printf("%s", stringVal);
-
-							buffer[0] = 0;
-							bufferIndex = 0;
-
-						} else {
-							buffer[bufferIndex] = '%';
-							buffer[bufferIndex+1] = c;
-							bufferIndex += 2;
-						}
-					} else {
 						buffer[bufferIndex] = c;
 						bufferIndex++;
-					}
+
+						if(c == '}'){
+							buffer[bufferIndex] = 0; // Found end marker
+							buffer[bufferIndex-2] = 0; // Exclude ending %}
+
+							char trimmed[bufferSize]; // Trim whitespace
+							sscanf(buffer+2," %s }", trimmed);
+							printf("Buffer:%s\n", buffer);
+							printf("Trimmed:%s\n", trimmed);
+							char retVal[bufferSize];
+							getKeyVal(retVal, trimmed, keyMap, mapSize);
+							printf("%s", retVal);
+
+							bufferIndex = 0;
+							buffer[0] = 0;
+						} 
+
+					} 
+
+
 				}
 
 
 			} else {
-				fprintf(output, "%c", c);
+				buffer[bufferIndex] = c;
+				buffer[bufferIndex+1] = 0;
+				fprintf(output, "%s", buffer);
+				bufferIndex = 0;
+				buffer[0] = 0;
 			}
 
 
 		} else {
 			fprintf(output, "%c", c);
 		}
-	}
+	}	
+
 	if(buffer[0]){
-		fprintf(output, "%s", buffer);
+		fprintf(output,"%s", buffer);
 	}
+
+
 }

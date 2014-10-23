@@ -19,15 +19,10 @@ int main(){
 	
 	loadSlotData();
 
-	FILE * fp = fopen(filepath, "r");
+	FILE * fp = mopen(filepath, "r");
+
+	readInput(fp, stdout, keyMap, NUM_SLOTS);
 	
-	if(fp == NULL){
-		printf("Error opening file: %s\n", filepath);
-	} else {
-
-		readInput(fp, stdout, keyMap, NUM_SLOTS);
-	}
-
 	fclose(fp);
 
 	return 0;

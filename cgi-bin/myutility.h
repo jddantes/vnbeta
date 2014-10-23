@@ -95,6 +95,19 @@ int prepare(sqlite3 * conn, const char * query, int numBytes, sqlite3_stmt ** re
 
 char * mgets(char * str, int num, FILE * stream){
 	char * ret = fgets(str, num, stream);
-	str[strlen(str)-1] = 0;
+	if(str[strlen(str)-1] == '\n'){
+		str[strlen(str)-1] = 0;		
+	}
 	return ret;
+}
+
+FILE * mopen(const char * filename, const char * mode){
+	FILE * ret = fopen(filename, mode);
+	if(ret == NULL){
+		char errMsg[2000];
+		sprintf(errMsg, "could not open file %s", filename);
+		term(errMsg);
+	} else {
+		return ret;
+	}
 }

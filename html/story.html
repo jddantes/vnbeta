@@ -3,6 +3,20 @@
 	<title></title>
 </head>
 <body>
-	
+	<form action="story.cgi" method="POST">
+		
+		<div class="dialogue">
+			<div class="speaker">
+				{% speaker %}
+			</div>
+			<div class="speech">
+				{% speech %}
+			</div>
+		</div>
+
+		<input type="hidden" name="state" value="{%state%}" />
+		<input type="hidden" name="d_index" value="{%d_index%}" />
+		<input type="submit" value="Proceed" />
+	</form>
 </body>
 </html>

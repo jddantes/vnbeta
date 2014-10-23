@@ -58,14 +58,18 @@ void readInput(FILE * fp, FILE * output, pair * keyMap, int mapSize){
 
 							char trimmed[bufferSize]; // Trim whitespace
 							sscanf(buffer+2," %s }", trimmed);
-							printf("Buffer:%s\n", buffer);
-							printf("Trimmed:%s\n", trimmed);
 							char retVal[bufferSize];
+							retVal[0] = 0;
 							getKeyVal(retVal, trimmed, keyMap, mapSize);
 							printf("%s", retVal);
+							if(!retVal[0]){ // Not found in keyMap
+								printf("%s%%}", buffer);
+							}
 
 							bufferIndex = 0;
 							buffer[0] = 0;
+
+							break;
 						} 
 
 					} 

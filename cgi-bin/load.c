@@ -61,6 +61,8 @@ void loadSlotData(){
 
 		strcpy(keyMap[i].key, mapKey);
 		strcpy(keyMap[i].value, itoa(i+1, itoatemp, 10)); // Formerly mapVal instaed of itoa - using usr_id.
+		strcat(keyMap[i].value, ":");
+		strcat(keyMap[i].value, mapVal); // Now using a triple of id, filename and d_index
 		i++;
 	}
 

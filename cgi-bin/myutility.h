@@ -21,6 +21,7 @@ char * strapp(char * dest, const char * src){
 */
 char map(char * code){
 	if(!strcmp(code, "3B")) return ';';
+	if(!strcmp(code, "3A")) return ':';
 	if(!strcmp(code, "20")) return ' ';
 	if(!strcmp(code, "25")) return '%';
 	if(!strcmp(code, "21")) return '!';

@@ -23,8 +23,6 @@ int numChoices = 0;
 strMap postData;
 strMap detailsMap;
 
-pair keyMap[100];
-int keyMapSize = 5;
 /*
 	Contents of keyMap:
 	0 nextScene

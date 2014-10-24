@@ -155,3 +155,50 @@ void processPostData(char * buffer, pair * keyMap, int * numPostData){
 
 }
 
+/*
+	strjoin and strapp to emulate c++ string handling
+*/
+
+char * strjoin(char * dest, ...){
+	va_list vl;
+	va_start(vl, dest);
+	
+	char * str;
+
+	int i;
+	for(i = 0; ; i++){
+		str = va_arg(vl, char *);
+
+		if(str == NULL){
+			break;
+		}
+		i ? strcat(dest, str) : strcpy(dest, str);
+	}
+
+	va_end(vl);
+
+	return dest;
+}
+
+char * strapp(char * dest, ...){
+	va_list vl;
+	va_start(vl, dest);
+
+	char * str;
+
+	int i;
+	for(i = 0; ; i++){
+		str = va_arg(vl, char *);
+
+		if( str == NULL ){
+			break;
+		}
+
+		strcat(dest, str);
+	}
+
+	va_end(vl);
+
+	return dest;
+}
+

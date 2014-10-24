@@ -49,27 +49,15 @@ int main(){
 		fgets(buffer, 2000, stdin);
 		decode(buffer);
 		
-
 		processPostData(buffer, postData, &numPostData);
 
-		char temp[2000];
-		char statePair[2000]; // filename/d_index pair
-		getKeyVal(temp, "state", postData, numPostData);
-		split(temp, usr, statePair, ":");
+		char tripleState[2000];
+		getKeyVal(tripleState, "state", postData, numPostData);
+		char scene[2000];
+		int d_index;
+		readTriple(tripleState, usr, scene, &d_index);
 
-		char sceneName[2000];
-		char scene[2000] = SCENEPATH; strcat(scene, "/");
-		char d_str[2000];
-		split(statePair, sceneName, d_str, ",");
-		strcat(scene, sceneName);
-		int d_index = atoi(d_str);
-
-
-		FILE * fp = mopen(scene, "r");
-
-		loadScene(fp);
-
-		fclose(fp);
+		loadScene(scene);
 
 
 		// Process normal dialogues
@@ -105,7 +93,7 @@ int main(){
 		// Render HTML
 		char htmlpath[2000];
 		strjoin(htmlpath, HTMLPATH, "/story.html", NULL);
-		fp = mopen(htmlpath, "r");
+		FILE * fp = mopen(htmlpath, "r");
 		readInput(fp, stdout, keyMap, keyMapSize);
 		fclose(fp);
 
@@ -115,7 +103,12 @@ int main(){
 
 }
 
-void loadScene(FILE * fp){
+void loadScene(char * scene){
+
+	char scenePath[2000];
+	strjoin(scenePath, SCENEPATH, "/", scene);
+	FILE * fp = mopen(scenePath, "r");
+
 	char buffer[2000];
 
 	// Read scene headers
@@ -148,6 +141,8 @@ void loadScene(FILE * fp){
 		}
 
 	}
+
+	close(fp);
 }
 
 void handle(char * action, char * buffer){

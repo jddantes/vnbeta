@@ -5,20 +5,7 @@
 #include "strMap.h"
 
 
-
-char * getKeyVal(char * dest, char * key, pair * keyMap, int mapSize){
-	int i;
-	for(i = 0; i<mapSize; i++){
-		//printf("In getkeyval %d: %s<br>",i, keyMap[i].key);
-		if(!strcmp(keyMap[i].key, key)){
-			return strcpy(dest,keyMap[i].value);
-		}
-	}
-
-	return 0;
-}
-
-void readInput(FILE * fp, FILE * output, pair * keyMap, int mapSize){
+void readInput(FILE * fp, FILE * output, strMap * map){
 	const int bufferSize = 2000;
 	char buffer[bufferSize];
 	buffer[0] = 0;
@@ -60,12 +47,12 @@ void readInput(FILE * fp, FILE * output, pair * keyMap, int mapSize){
 
 							char trimmed[bufferSize]; // Trim whitespace
 							sscanf(buffer+2," %s }", trimmed);
-							char retVal[bufferSize];
-							retVal[0] = 0;
-							getKeyVal(retVal, trimmed, keyMap, mapSize);
-							printf("%s", retVal);
-							if(!retVal[0]){ // Not found in keyMap
-								// printf("%s%%}", buffer);
+
+							char * actualValue = mapVal(map, trimmed);
+							if( actualValue != NULL){
+								fprintf(fp, "%s", actualValue);
+							} else {
+								// Do nothing when keyword is not found
 							}
 
 							bufferIndex = 0;
@@ -100,3 +87,5 @@ void readInput(FILE * fp, FILE * output, pair * keyMap, int mapSize){
 
 
 }
+
+

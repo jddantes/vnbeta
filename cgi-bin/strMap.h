@@ -1,3 +1,6 @@
+#ifndef STRMAP_H_
+#define	STRMAP_H_
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -86,6 +89,8 @@ int mapSize(strMap * map){
 void printMap(strMap * map){
 	int i;
 	for(i = 0; i<mapSize(map); i++){
-		printf("%s - %s\n", map->pairList[i].key, map->pairList[i].val);
+		printf("%s - %s<br>\n", map->pairList[i].key, map->pairList[i].val);
 	}
 }
+
+#endif

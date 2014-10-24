@@ -6,18 +6,23 @@
 #include "myutility.h"
 #include "mytypes.h"
 #include "inputReader.h"
+#include "strMap.h"
+#include "vnutil.h"
 
-void loadScene(FILE * fp);
+void loadScene(char * scene);
 void handle(char * action, char * buffer);
 void credits();
+
+char nullArr[MAX_STR_SIZE];
 
 dialogue dialogues[1000] = {};
 choice choices[100] = {};
 int numDialogues = 0;
 int numChoices = 0;
 
-pair postData[100];
-int numPostData = 0;
+strMap postData;
+strMap detailsMap;
+
 pair keyMap[100];
 int keyMapSize = 5;
 /*
@@ -47,54 +52,40 @@ int main(){
 		printf("</body></html>");
 	} else {
 		fgets(buffer, 2000, stdin);
-		decode(buffer);
-		
-		processPostData(buffer, postData, &numPostData);
+		makePostMap(&postData, buffer);
 
 		char tripleState[2000];
-		getKeyVal(tripleState, "state", postData, numPostData);
+		strcpy(tripleState, mapVal(&postData, "state"));
 		char scene[2000];
-		int d_index;
-		readTriple(tripleState, usr, scene, &d_index);
-
+		char d_str[2000];
+		readTriple(tripleState, usr, scene, d_str);
+		int d_index = atoi(d_str);
+		mapAdd(&detailsMap, "d_index", d_str);
 		loadScene(scene);
 
 
-		// Process normal dialogues
-		
 
-		strcpy(keyMap[1].key, "speaker");
-		strcpy(keyMap[1].value, dialogues[d_index].speaker);
-		strcpy(keyMap[2].key, "speech");
-		strcpy(keyMap[2].value, dialogues[d_index].speech);
-		strcpy(keyMap[3].key, "state");
-		strjoin(keyMap[3].value, usr, ":", sceneName, ",", NULL);
-		itoa(d_index+1, keyMap[3].value+strlen(keyMap[3].value), 10);
+		// Process normal dialogues
+		mapAdd(&detailsMap, "speaker", dialogues[d_index].speaker);
+		mapAdd(&detailsMap, "speech", dialogues[d_index].speech);
+		mapAdd(&detailsMap, "state", makeTriple(nullArr, usr, scene, d_index+1));
+
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
-			strjoin(keyMap[3].value, usr, ":", keyMap[0].value, NULL);
-		}
-		for(i = 0; i<keyMapSize; i++){
-			printf("<br/>%s:%s",keyMap[i].key, keyMap[i].value);
+			mapUpdate(&detailsMap, "state", mapVal(&detailsMap, "nextScene"));
 		}
 
 		// Process choices 
-		strcpy(keyMap[4].key, "choiceList");
+		mapAdd(&detailsMap, "choiceList", "");
 		for(i = 0; i<numChoices; i++){
-			strapp(keyMap[4].value, "<input type='radio' name='state' value='", usr, ":", choices[i].branch, ",0' />", choices[i].speech, "</br>\n", NULL);
+			mapApp(&detailsMap, "choiceList", strjoin(nullArr, "<input type='radio' name='state' value='", usr, ":", choices[i].branch, ",0' />", choices[i].speech, "</br>\n", NULL));
 		}
-
-
-		printf("<br>Printing keyMap: <br>");
-		for(i = 0; i<keyMapSize; i++){
-			printf("%s:%s<br>", keyMap[i].key, keyMap[i].value);
-		}
-		printf("----<br>");
+		printMap(&detailsMap);
 
 		// Render HTML
 		char htmlpath[2000];
 		strjoin(htmlpath, HTMLPATH, "/story.html", NULL);
 		FILE * fp = mopen(htmlpath, "r");
-		readInput(fp, stdout, keyMap, keyMapSize);
+		readInput(fp, stdout, &detailsMap);
 		fclose(fp);
 
 	}
@@ -152,16 +143,13 @@ void handle(char * action, char * buffer){
 		split(buffer, dialogues[numDialogues].speaker, dialogues[numDialogues].speech, ":");
 		numDialogues++;
 	} else if(!strcmp(action, "b")) { // Branch to scene
-		printf("<br>branch: %s<br>", buffer);
-		strcpy(keyMap[0].key, "nextScene");
-		strjoin(keyMap[0].value, buffer, ",0", NULL);
+		// printf("<br>branch: %s<br>", buffer);
+		mapAdd(&detailsMap, "nextScene", strjoin(nullArr, usr, ":", buffer, ",0", NULL));
 	} else if(!strcmp(action, "c")){
 		split(buffer, choices[numChoices].branch, choices[numChoices].speech, ":");
 		numChoices++;
 	}
 
-
- 
 }
 
 void credits(){

@@ -1,3 +1,6 @@
+#ifndef MYUTILITY_H_
+#define MYUTILITY_H_
+
 #include <string.h>
 #include <ctype.h>
 #include <sqlite3.h>
@@ -11,11 +14,6 @@ void term(char * message){
 	printf(". Aborting...\n");
 	exit(0);
 }
-
-char * strapp(char * dest, const char * src){
-	return strcpy(dest+strlen(dest), src);
-}
-
 
 /*
 	Removes url encoding
@@ -133,43 +131,24 @@ void split(char * buffer, char * a, char * b, char * delim){
 
 }
 
-void makePostMap(char * postString, strMap * map){
+void makePostMap(strMap * map, char * postString){
 	char buffer[strlen(postString)+1];
 	strcpy(buffer, postString);
+	decode(buffer);
 
 	char * pch = strtok(buffer, "&");
 
 	while(pch != NULL){
 		char key[MAX_STR_SIZE];
 		char val[MAX_STR_SIZE];
-		split(pch, key, value, "=");
-		mapAdd(map, key, value);
-	}
-
-}
-
-void old_processPostData(char * buffer, pair * keyMap, int * numPostData){
-	char str[strlen(buffer)];
-	int i = 0;
-	char * pch = strtok(buffer, "&");
-
-	while(pch != NULL){
-
-		char key[2000];
-		char value[2000];
-
-		split(pch, key, value, "=");
-		strcpy(keyMap[i].key, key);
-		strcpy(keyMap[i].value, value);
+		split(pch, key, val, "=");
+		mapAdd(map, key, val);
 
 		pch = strtok(NULL, "&");
-
-		i++;
 	}
 
-	*numPostData = i;
-
 }
+
 
 /*
 	strjoin and strapp to emulate c++ string handling
@@ -218,3 +197,4 @@ char * strapp(char * dest, ...){
 	return dest;
 }
 
+#endif

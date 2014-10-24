@@ -50,9 +50,10 @@ void readInput(FILE * fp, FILE * output, strMap * map){
 
 							char * actualValue = mapVal(map, trimmed);
 							if( actualValue != NULL){
-								fprintf(fp, "%s", actualValue);
+								fprintf(output, "%s", actualValue);
 							} else {
 								// Do nothing when keyword is not found
+								// printf("%s\n", strjoin(trimmed, buffer, "%}", NULL));
 							}
 
 							bufferIndex = 0;

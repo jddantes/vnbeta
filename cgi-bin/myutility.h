@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <sqlite3.h>
 #include "mytypes.h"
+#include "strmap.h"
 /*
 	originally error or abort, but both are commonly used so I went with terminate, or term for short
 */
@@ -132,7 +133,22 @@ void split(char * buffer, char * a, char * b, char * delim){
 
 }
 
-void processPostData(char * buffer, pair * keyMap, int * numPostData){
+void makePostMap(char * postString, strMap * map){
+	char buffer[strlen(postString)+1];
+	strcpy(buffer, postString);
+
+	char * pch = strtok(buffer, "&");
+
+	while(pch != NULL){
+		char key[MAX_STR_SIZE];
+		char val[MAX_STR_SIZE];
+		split(pch, key, value, "=");
+		mapAdd(map, key, value);
+	}
+
+}
+
+void old_processPostData(char * buffer, pair * keyMap, int * numPostData){
 	char str[strlen(buffer)];
 	int i = 0;
 	char * pch = strtok(buffer, "&");

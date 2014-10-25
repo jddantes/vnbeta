@@ -104,6 +104,11 @@ FILE * mopen(const char * filename, const char * mode){
 
 void split(char * buffer, char * a, char * b, char * delim){
 	char * pch = strstr(buffer, delim);
+	if(pch == NULL){
+		strcpy(a, buffer);
+		strcpy(b, "");
+		return;
+	}
 	strncpy(a, buffer, pch-buffer); 
 	a[pch-buffer] = 0;
 	strcpy(b, pch+1);

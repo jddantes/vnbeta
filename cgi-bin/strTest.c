@@ -45,6 +45,18 @@ char * strapp(char * dest, ...){
 	return dest;
 }
 
+void split(char * buffer, char * a, char * b, char * delim){
+	char * pch = strstr(buffer, delim);
+	if(pch == NULL){
+		strcpy(a, buffer);
+		strcpy(b, "");
+		return;
+	}
+	strncpy(a, buffer, pch-buffer); 
+	a[pch-buffer] = 0;
+	strcpy(b, pch+1);
+}
+
 int main(){
 	
 	char str[20000] = "";
@@ -59,6 +71,14 @@ int main(){
 
 	strjoin(str, this, " is the new content now :)", NULL);
 	puts(str);
+
+	char a[2000];
+	char b[2000];
+
+	split(":asdfasdf", a, b, ":");
+
+	printf("[%s]\n", a);
+	printf("[%s]\n", b);
 
 	
 	return 0;

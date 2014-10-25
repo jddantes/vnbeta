@@ -1,13 +1,18 @@
 <html>
 <head>
-	<title></title>
+	<title>VN! - Save success!</title>
+	<style type="text/css">
+		body{
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
-	Save success
+	<h2>Save success</h2>
 
 	<form action="story.cgi" method="POST">
-		Return to scene {%currentState%};
-		<input type="hidden" name="state" value="{%currentState%}" />
+		Return to scene {%state%} <br>
+		<input type="hidden" name="state" value="{%state%}" />
 		<input type="submit" value="Proceed" />
 	</form>
 </body>

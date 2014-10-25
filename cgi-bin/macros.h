@@ -9,4 +9,7 @@
 
 #define NUM_SLOTS 10
 
+#define DEFAULT_SCENE "1.vn"
+#define END_SCENE "end.vn"
+
 #endif

@@ -26,15 +26,14 @@ int main(){
 		makePostMap(&postData, buffer);
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
 		
+		printMap(&postData);
+
 		loadSlotData();
 		char filepath[2000];
 		strjoin(filepath, HTMLPATH, "/save.html", NULL);
 		render(filepath, &detailsMap);
-		/*
-			What will be passed to saveExec:
-				state => state to overwrite
-				nextState => state to return to
-		*/
+
+
 	
 	}
 

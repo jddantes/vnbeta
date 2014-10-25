@@ -48,6 +48,13 @@ int main(){
 		char scene[2000];
 		char d_str[2000];
 		readTriple(tripleState, usr, scene, d_str);
+
+		if(!strlen(scene)){
+			strcpy(scene, DEFAULT_SCENE);
+		} else if (!strcmp(scene, END_SCENE)){
+			credits();
+		}
+
 		int d_index = atoi(d_str);
 		mapAdd(&detailsMap, "d_index", d_str);
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "state"));
@@ -67,13 +74,14 @@ int main(){
 		for(i = 0; i<numChoices; i++){
 			mapApp(&detailsMap, "choiceList", strjoin(nullArr, "<input type='radio' name='state' value='", usr, ":", choices[i].branch, ",0' />", choices[i].speech, "</br>\n", NULL));
 		}
-		printMap(&detailsMap);
+		
 
 		// Render HTML
 		char htmlpath[2000];
 		strjoin(htmlpath, HTMLPATH, "/story.html", NULL);
 		render(htmlpath, &detailsMap);
 
+		printMap(&detailsMap);
 	}
 
 	return 0;
@@ -140,5 +148,6 @@ void handle(char * action, char * buffer){
 
 void credits(){
 	printf("<html><body>You've reached the end!</body></html>");
+	exit(0);
 
 }

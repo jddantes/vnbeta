@@ -1,6 +1,11 @@
 <html>
 <head>
-	<title></title>
+	<title>VN!</title>
+	<style type="text/css">
+		body{
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
 	<form action="story.cgi" method="POST">
@@ -25,7 +30,7 @@
 	</form>
 
 	<form action="save.cgi" method="POST">
-		<input type="hidden" name="state" value="{%currentState%}" />
+		<input type="hidden" name="currentState" value="{%currentState%}" />
 		<input type="submit" value="Save" />
 	</form>
 

@@ -4,10 +4,11 @@
 #include <string.h>
 #include "inputReader.h"
 #include "myutility.h"
+#include "strMap.h"
+#include "vnutil.h"
 
-pair keyMap[100];
-pair postData[100];
-int numPostData = 0;
+strMap postData;
+strMap detailsMap;
 
 char usr[2000];
 char nullBuffer[2000];
@@ -20,50 +21,28 @@ int main(){
 	if(!strlen(data)){
 		printf("Go back to the home page");
 	} else {
-		char filepath[2000] = {};
-		strcpy(filepath, HTMLPATH);
-		strcat(filepath, "/saveExec.html");
 
 		char buffer[2000];
 		fgets(buffer, 2000, stdin);
-		decode(buffer);
-		processPostData(buffer, postData, &numPostData);
+		makePostMap(&postData, buffer);
 
-		char state[2000];
-		char nextState[2000];
-		getKeyVal(state, "state", postData, numPostData);
-		getKeyVal(nextState, "nextState", postData, numPostData);
-		printf("State: %s<br>", state);
-		printf("nextState: %s<br>", nextState);
+		state_t currentState, newState; // currentState to return to, newState slot to overwrite to
+		currentState = makeStateFromTriple(mapVal(&postData, "currentState"));
+		newState = makeStateFromTriple(mapVal(&postData, "state"));
+		strcpy(newState.scene, currentState.scene);
+		strcpy(newState.d_str, currentState.d_str);
 
-		char statePair[2000]; // filename/d_index pair
-		/*
-			keyMap["state"] now holds state to overwrite
-			keyMap["nextState"] now holds state to return to
-		*/
-		
-		split(nextState, usr, statePair, ":");
-		printf("statePair:%s<br>", statePair);
-		char sceneName[2000];
-		char scene[2000] = SCENEPATH; strcat(scene, "/");
-		char d_str[2000];
-		split(statePair, sceneName, d_str, ",");
-		strcat(scene, sceneName);
-		int d_index = atoi(d_str);
-		
-		char saveUsr[2000];
-		split(state, saveUsr, nullBuffer, ":");
-
+		char tripleState[2000];
+		makeTriple(tripleState, newState.usr, newState.scene, atoi(newState.d_str));
+		mapAdd(&detailsMap, "state", tripleState);
 
 		sqlite3 * conn;
 		sqlite3_stmt * result;
 		const char * tail;
 		sql_open(DBPATH, &conn);
-		char sqlQuery[2000] = "UPDATE slots SET dialogue="; strcat(sqlQuery, d_str);
-		strcat(sqlQuery,", scene='"); strcat(sqlQuery, sceneName); 
-		strcat(sqlQuery, "' WHERE usr_id="); strcat(sqlQuery, saveUsr);
-		strcat(sqlQuery, ";");
-
+		char sqlQuery[2000];
+		strjoin(sqlQuery, "UPDATE slots SET dialogue=", newState.d_str, ", scene='", newState.scene, "' WHERE usr_id=", newState.usr, ";", NULL);
+		
 		printf("Sqlquery: %s", sqlQuery);
 		prepare(conn, sqlQuery, 2000, &result, &tail);
 		sqlite3_step(result);
@@ -71,11 +50,10 @@ int main(){
 		sqlite3_close(conn);
 
 
-		FILE * fp = mopen(filepath, "r");
+		char filepath[2000];
+		strjoin(filepath, HTMLPATH, "/saveExec.html", NULL);
+		render(filepath, &detailsMap);
 
-		readInput(fp, stdout, postData, numPostData);
-
-		fclose(fp);
 	}
 
 	return 0;

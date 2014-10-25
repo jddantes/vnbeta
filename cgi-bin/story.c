@@ -23,15 +23,6 @@ int numChoices = 0;
 strMap postData;
 strMap detailsMap;
 
-/*
-	Contents of keyMap:
-	0 nextScene
-	1 speaker
-	2 speech
-	3 state
-	4 choiceList
-*/
-
 int i;
 char usr[2000];
 int usr_id;

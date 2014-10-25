@@ -197,4 +197,9 @@ char * strapp(char * dest, ...){
 	return dest;
 }
 
+char * strappNum(char * dest, int num){
+	char num_str[2000];
+	itoa(num, num_str, 10);
+	return strapp(dest, num_str, NULL);
+}
 #endif

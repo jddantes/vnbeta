@@ -28,5 +28,12 @@ char * makeTriple(char * dest, char * usr, char * scene, int d_index){
 	return strjoin(dest, usr, ":", scene, ",", d_str, NULL);
 }
 
+char * makeTripleNum(char * dest, int usr_id, char * scene, int d_index){
+	char usr[2000];
+	char d_str[2000];
+	itoa(usr_id, usr, 10);
+	itoa(d_index, d_str, 10);
+	return strjoin(dest, usr, ":", scene, ",", d_str, NULL);
+}
 
 #endif

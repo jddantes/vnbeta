@@ -50,9 +50,8 @@ int main(){
 		readTriple(tripleState, usr, scene, d_str);
 		int d_index = atoi(d_str);
 		mapAdd(&detailsMap, "d_index", d_str);
+		mapAdd(&detailsMap, "currentState", mapVal(&postData, "state"));
 		loadScene(scene);
-
-
 
 		// Process normal dialogues
 		mapAdd(&detailsMap, "speaker", dialogues[d_index].speaker);
@@ -73,9 +72,7 @@ int main(){
 		// Render HTML
 		char htmlpath[2000];
 		strjoin(htmlpath, HTMLPATH, "/story.html", NULL);
-		FILE * fp = mopen(htmlpath, "r");
-		readInput(fp, stdout, &detailsMap);
-		fclose(fp);
+		render(htmlpath, &detailsMap);
 
 	}
 

@@ -6,10 +6,11 @@
 #include "macros.h"
 #include "inputReader.h"
 #include "myutility.h"
+#include "vnutil.h"
+#include "strMap.h"
 
-pair keyMap[100];
-pair postData[100];
-int numPostData = 0;
+strMap postData;
+strMap detailsMap;
 
 void loadSlotData();
 
@@ -22,26 +23,19 @@ int main(){
 	}  else {
 		char buffer[2000];
 		fgets(buffer, 2000, stdin);
-		decode(buffer);
-
-		processPostData(buffer, postData, &numPostData);
-		char temp[2000];
-		getKeyVal(temp, "state", postData, numPostData);
-		strcpy(keyMap[NUM_SLOTS+1].key, "nextState");
-		strcpy(keyMap[NUM_SLOTS+1].value, temp);
-		
+		makePostMap(&postData, buffer);
+		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
 		
 		loadSlotData();
-		char filepath[2000] = {}; strcpy(filepath, HTMLPATH); strcat(filepath, "/save.html");
-		FILE * fp = mopen(filepath, "r");
-
-		readInput(fp, stdout, keyMap, 100);
+		char filepath[2000];
+		strjoin(filepath, HTMLPATH, "/save.html", NULL);
+		render(filepath, &detailsMap);
 		/*
 			What will be passed to saveExec:
 				state => state to overwrite
 				nextState => state to return to
 		*/
-		fclose(fp);
+	
 	}
 
 
@@ -58,34 +52,20 @@ void loadSlotData(){
 	const char * tail;
 
 	char dbpath[2000];
-	strcat(dbpath, ROOTPATH);
-	strcat(dbpath, "/");
-	strcat(dbpath, DBNAME);
+	strjoin(dbpath, ROOTPATH, "/", DBNAME, NULL);
 
-	printf("%s", dbpath);
-
-	error = sqlite3_open(dbpath, &conn);
-	if(error){
-		term("Could not open database");
-	}
-
+	sql_open(dbpath, &conn);
 
 	prepare(conn, "SELECT * FROM slots;", 2000, &result, &tail);
 	int i = 0;
 	while(sqlite3_step(result) == SQLITE_ROW){
 
-		char mapKey[2000] = "state";
-		char itoatemp[2000] = {};
-		strcat(mapKey, itoa(i+1, itoatemp, 10));
-		char mapVal[2000] = {};
-		strcpy(mapVal, sqlite3_column_text(result, 1));
-		strcat(mapVal, ",");
-		strcat(mapVal, itoa(sqlite3_column_int(result, 2), itoatemp, 10));
+		char tripleState[2000];
+		makeTripleNum(tripleState, sqlite3_column_int(result, 0), (char *) sqlite3_column_text(result, 1), (int) sqlite3_column_int(result, 2));		
 
-		strcpy(keyMap[i].key, mapKey);
-		strcpy(keyMap[i].value, itoa(i+1, itoatemp, 10)); // Formerly mapVal instaed of itoa - using usr_id.
-		strcat(keyMap[i].value, ":");
-		strcat(keyMap[i].value, mapVal); // Now using a triple of id, filename and d_index
+		char _state[2000] = "state";
+		mapAdd(&detailsMap, strappNum(_state, i+1), tripleState);
+
 		i++;
 	}
 

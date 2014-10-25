@@ -3,9 +3,19 @@
 #include <stdlib.h>
 #include "mytypes.h"
 #include "strMap.h"
+#include "myutility.h"
 
+void readInput(FILE * fp, FILE * output, strMap * map);
+
+
+void render(char * filename, strMap * map){
+	FILE * fp = mopen(filename, "r");
+	readInput(fp, stdout, map);
+	close(fp);
+}
 
 void readInput(FILE * fp, FILE * output, strMap * map){
+
 	const int bufferSize = 2000;
 	char buffer[bufferSize];
 	buffer[0] = 0;

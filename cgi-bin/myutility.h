@@ -6,6 +6,7 @@
 #include <sqlite3.h>
 #include "mytypes.h"
 #include "strmap.h"
+
 /*
 	originally error or abort, but both are commonly used so I went with terminate, or term for short
 */
@@ -80,29 +81,6 @@ int isallNum(char * str){
 	return 1;
 }
 
-/*
-	sqlite3_prepare_v2 with error check
-*/
-int prepare(sqlite3 * conn, const char * query, int numBytes, sqlite3_stmt ** result, const char ** tail){
-	int error = sqlite3_prepare_v2(conn, query, numBytes, result, tail);
-
-	if(error != SQLITE_OK){
-		term("Got error while retrieving data");
-	}
-
-	return error;
-}
-
-/*
-	sqlite3_open with error check
-*/
-int sql_open(const char * dbpath, sqlite3 ** conn){
-	int error = sqlite3_open(dbpath, conn);
-	if(error){
-		term("could not open database");
-	}
-	return error;
-}
 
 
 char * mgets(char * str, int num, FILE * stream){
@@ -126,9 +104,9 @@ FILE * mopen(const char * filename, const char * mode){
 
 void split(char * buffer, char * a, char * b, char * delim){
 	char * pch = strstr(buffer, delim);
-	strncpy(a, buffer, pch-buffer);
+	strncpy(a, buffer, pch-buffer); 
+	a[pch-buffer] = 0;
 	strcpy(b, pch+1);
-
 }
 
 void makePostMap(strMap * map, char * postString){
@@ -143,7 +121,6 @@ void makePostMap(strMap * map, char * postString){
 		char val[MAX_STR_SIZE];
 		split(pch, key, val, "=");
 		mapAdd(map, key, val);
-
 		pch = strtok(NULL, "&");
 	}
 
@@ -202,4 +179,31 @@ char * strappNum(char * dest, int num){
 	itoa(num, num_str, 10);
 	return strapp(dest, num_str, NULL);
 }
+
+/*
+	sqlite3_prepare_v2 with error check
+*/
+int prepare(sqlite3 * conn, const char * query, int numBytes, sqlite3_stmt ** result, const char ** tail){
+	int error = sqlite3_prepare_v2(conn, query, numBytes, result, tail);
+
+	if(error != SQLITE_OK){
+		char errMsg[2000];
+		term(strapp(errMsg, "Got error while retrieving data: query: ", query, NULL));
+	}
+
+	return error;
+}
+
+/*
+	sqlite3_open with error check
+*/
+int sql_open(const char * dbpath, sqlite3 ** conn){
+	int error = sqlite3_open(dbpath, conn);
+	if(error){
+		term("could not open database");
+	}
+	return error;
+}
+
+
 #endif

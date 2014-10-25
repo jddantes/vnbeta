@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>VN! - Store</title>
+	<style type="text/css">
+		body{
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<h2>Store</h2>
+	<div class="wallet">{%wallet%}</div>
+	<div class="inventory_dump">
+		<form action="storeExec.cgi" method="post">
+			{% inventory %}
+			<input type="submit" value="Buy">
+			<input type="hidden" value="{% currentState %}"/>
+		</form>
+	</div>
+	<div class="purchased_dump">
+	{% purchased %}
+	</div>
+</body>
+</html>

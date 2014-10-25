@@ -14,7 +14,7 @@ char nullArr[2000];
 void save();
 void saveMoney();
 void saveItems();
-void flushItems();
+void flushItems(char * usr);
 void saveTempItems();
 
 int main(){
@@ -32,6 +32,7 @@ int main(){
 
 		state_t currentState, newState; // currentState to return to, newState slot to overwrite to
 		currentState = makeStateFromTriple(mapVal(&postData, "currentState"));
+		flushItems(currentState.usr);
 		newState = makeStateFromTriple(mapVal(&postData, "state"));
 		strcpy(newState.scene, currentState.scene);
 		strcpy(newState.d_str, currentState.d_str);
@@ -52,7 +53,6 @@ int main(){
 		sqlite3_step(result);
 		sqlite3_finalize(result);
 		sqlite3_close(conn);
-
 		save();
 
 		char filepath[2000];
@@ -80,28 +80,27 @@ void saveMoney(){
 	sqlite3 * conn;
 	sqlite3_stmt * result;
 	const char * tail;
-	sql_open(DBNAME, &conn);
+	sql_open(DBPATH, &conn);
+	prepare(conn, strjoin(nullArr, "UPDATE slots SET money=", strnum(nullArr2, wallet), " WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
 
-	prepare(conn, strjoin(nullArr, "UPDATE slots SET money=", strnum(nullArr2, wallet), " WHERE usr_id=", atoi(s.usr), ";", NULL), 2000, &result, &tail);
 	sqlite3_step(result);
 	sqlite3_finalize(result);
 	sqlite3_close(conn);
 }	
 
 void saveItems(){
-	flushItems();
 	saveTempItems();
 }
 
-void flushItems(){
-	state_t s = makeStateFromTriple(mapVal(&detailsMap, "state"));
+void flushItems(char * usr){
 
 	sqlite3 * conn;
 	sqlite3_stmt * result;
 	const char * tail;
-	sql_open(DBNAME, &conn);
+	sql_open(DBPATH, &conn);
 
-	prepare(conn, strjoin(nullArr, "DELETE FROM purchases WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
+	prepare(conn, strjoin(nullArr, "DELETE FROM purchases WHERE usr_id=", usr, ";", NULL), 2000, &result, &tail);
+	
 	sqlite3_step(result);
 	sqlite3_finalize(result);
 	sqlite3_close(conn);
@@ -114,7 +113,7 @@ void saveTempItems(){
 	sqlite3 * conn;
 	sqlite3_stmt * result;
 	const char * tail;
-	sql_open(DBNAME, &conn);
+	sql_open(DBPATH, &conn);
 
 	prepare(conn, strjoin(nullArr, "SELECT item_id FROM temp_purc;", NULL), 2000, &result, &tail);
 	while(sqlite3_step(result) == SQLITE_ROW){

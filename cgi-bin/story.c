@@ -60,14 +60,19 @@ int main(){
 		}
 
 		if(mapVal(&postData, "wallet") == NULL){;
+			printf("No wallet. Initializing temp.<br>");
 			initializeTemp();
-		} 
+		} else {
+			char nullArr2[2000];
+			mapUpdate(&detailsMap, "wallet", strnum(nullArr2, tempWallet()));
+			printf("Updating wallet to %s<br>\n", strnum(nullArr2, tempWallet())); 
+		}
 
 		int d_index = atoi(d_str);
 		mapAdd(&detailsMap, "d_index", d_str);
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "state"));
 		loadScene(scene);
-
+		
 		// Process normal dialogues
 		mapAdd(&detailsMap, "speaker", dialogues[d_index].speaker);
 		mapAdd(&detailsMap, "speech", dialogues[d_index].speech);
@@ -99,7 +104,7 @@ int main(){
 void loadScene(char * scene){
 
 	char scenePath[2000];
-	strjoin(scenePath, SCENEPATH, "/", scene);
+	strjoin(scenePath, SCENEPATH, "/", scene, NULL);
 	FILE * fp = mopen(scenePath, "r");
 
 	char buffer[2000];

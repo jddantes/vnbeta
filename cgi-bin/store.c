@@ -30,11 +30,12 @@ int main(){
 		char buffer[2000];
 		fgets(buffer, 2000, stdin);
 		makePostMap(&postData, buffer);
+
+		
 		
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
 		mapAdd(&detailsMap, "inventory", loadItems(nullArr));
 		mapAdd(&detailsMap, "purchased", loadOwned(nullArr));
-		mapAdd(&detailsMap, "wallet", getWallet(nullArr));
 
 		render(strjoin(nullArr, HTMLPATH, "/store.html", NULL), &detailsMap);
 
@@ -72,7 +73,7 @@ char * loadOwned(char * dump){
 	sqlite3 * conn;
 	sqlite3_stmt * result;
 	const char * tail;
-	sql_open(strjoin(nullArr, ROOTPATH, "/", DBNAME, NULL), &conn);
+	sql_open(DBPATH, &conn);
 	prepare(conn, strjoin(nullArr,"SELECT items.item_name FROM items JOIN purchases on items.item_id=purchases.item_id WHERE usr_id=", s.usr,";", NULL), 2000, &result, &tail);
 
 	nullArr[0] = 0;
@@ -92,9 +93,10 @@ char * getWallet(char * dump){
 	sqlite3 * conn;
 	sqlite3_stmt * result;
 	const char * tail;
-	sql_open(strjoin(nullArr, ROOTPATH, "/", DBNAME, NULL), &conn);
+	sql_open(DBPATH, &conn);
 	prepare(conn, strjoin(nullArr, "SELECT money FROM slots WHERE usr_id=",  s.usr, ";", NULL), 2000, &result, &tail);
 	sqlite3_step(result);
 	itoa(sqlite3_column_int(result, 0), dump, 10);
 	return dump;
 }
+

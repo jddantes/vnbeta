@@ -31,11 +31,13 @@
 
 	<form action="save.cgi" method="POST">
 		<input type="hidden" name="currentState" value="{%currentState%}" />
+		<input type="hidden" name="wallet" value="{%wallet%}" />
 		<input type="submit" value="Save" />
 	</form>
 
 	<form action="store.cgi" method="POST">
 		<input type="hidden" name="currentState" value="{%currentState%}" />
+		<input type="hidden" name="wallet" value="{%wallet%}" />
 		<input type="submit" value="Store" />
 	</form>
 

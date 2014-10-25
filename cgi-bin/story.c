@@ -12,6 +12,10 @@
 void loadScene(char * scene);
 void handle(char * action, char * buffer);
 void credits();
+void temp_money();
+void temp_purc();
+void initializeTemp();
+
 
 char nullArr[MAX_STR_SIZE];
 
@@ -54,6 +58,10 @@ int main(){
 		} else if (!strcmp(scene, END_SCENE)){
 			credits();
 		}
+
+		if(mapVal(&postData, "wallet") == NULL){;
+			initializeTemp();
+		} 
 
 		int d_index = atoi(d_str);
 		mapAdd(&detailsMap, "d_index", d_str);
@@ -149,5 +157,39 @@ void handle(char * action, char * buffer){
 void credits(){
 	printf("<html><body>You've reached the end!</body></html>");
 	exit(0);
+
+}
+
+void initializeTemp(){
+	temp_money();
+	temp_purc();
+}
+
+void temp_money(){
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, "DELETE FROM temp_money;", 2000, &result, &tail);
+	sqlite3_step(result);
+	sqlite3_finalize(result);
+
+	state_t s = makeStateFromTriple(mapVal(&postData, "state"));
+	prepare(conn, strjoin(nullArr, "SELECT money FROM slots WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	char wallet_str[2000];
+	itoa(sqlite3_column_int(result, 0), wallet_str, 10);
+	mapAdd(&detailsMap, "wallet", wallet_str);
+	sqlite3_finalize(result);
+
+	prepare(conn, strjoin(nullArr, "INSERT INTO temp_money VALUES(", mapVal(&detailsMap, "wallet"), ");", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	sqlite3_finalize(result);
+
+	sqlite3_close(conn);
+}
+
+void temp_purc(){
+
 
 }

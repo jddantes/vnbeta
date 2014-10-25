@@ -25,6 +25,7 @@ int main(){
 		fgets(buffer, 2000, stdin);
 		makePostMap(&postData, buffer);
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
+		mapAdd(&detailsMap, "wallet", mapVal(&postData, "wallet"));
 		
 		printMap(&postData);
 

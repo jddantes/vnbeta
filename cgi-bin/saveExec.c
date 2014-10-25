@@ -3,15 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "inputReader.h"
-#include "myutility.h"
-#include "strMap.h"
 #include "vnutil.h"
 
 strMap postData;
 strMap detailsMap;
 
 char usr[2000];
-char nullBuffer[2000];
+char nullArr[2000];
+
+void save();
+void saveMoney();
+void saveItems();
+void flushItems();
+void saveTempItems();
 
 int main(){
 	printf("Content-type:text/html\n\n");
@@ -49,6 +53,7 @@ int main(){
 		sqlite3_finalize(result);
 		sqlite3_close(conn);
 
+		save();
 
 		char filepath[2000];
 		strjoin(filepath, HTMLPATH, "/saveExec.html", NULL);
@@ -57,4 +62,71 @@ int main(){
 	}
 
 	return 0;
+}
+
+void save(){
+	saveMoney();
+	saveItems();
+}
+
+void saveMoney(){	
+	char nullArr2[2000];
+
+	int wallet = tempWallet();
+	mapUpdate(&detailsMap, "wallet", strnum(nullArr, wallet));
+
+	state_t s = makeStateFromTriple(mapVal(&detailsMap, "state"));
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBNAME, &conn);
+
+	prepare(conn, strjoin(nullArr, "UPDATE slots SET money=", strnum(nullArr2, wallet), " WHERE usr_id=", atoi(s.usr), ";", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+}	
+
+void saveItems(){
+	flushItems();
+	saveTempItems();
+}
+
+void flushItems(){
+	state_t s = makeStateFromTriple(mapVal(&detailsMap, "state"));
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBNAME, &conn);
+
+	prepare(conn, strjoin(nullArr, "DELETE FROM purchases WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+}
+
+void saveTempItems(){
+	char nullArr2[2000];
+	state_t s = makeStateFromTriple(mapVal(&detailsMap, "state"));
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBNAME, &conn);
+
+	prepare(conn, strjoin(nullArr, "SELECT item_id FROM temp_purc;", NULL), 2000, &result, &tail);
+	while(sqlite3_step(result) == SQLITE_ROW){
+
+		sqlite3_stmt * result2;
+		const char * tail2;
+
+		strnum(nullArr2, sqlite3_column_int(result, 0));
+		prepare(conn, strjoin(nullArr, "INSERT INTO purchases VALUES(",s.usr,",", nullArr2,");", NULL), 2000, &result2, &tail2);
+		sqlite3_step(result2);
+		sqlite3_finalize(result2);
+	}
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
 }

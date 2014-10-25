@@ -190,6 +190,31 @@ void temp_money(){
 }
 
 void temp_purc(){
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, "DELETE FROM temp_purc", 2000, &result, &tail);
+	sqlite3_step(result);
+	sqlite3_finalize(result);
 
+	state_t s = makeStateFromTriple(mapVal(&postData, "state"));
+
+	prepare(conn, strjoin(nullArr, "SELECT item_id FROM purchases WHERE usr_id=", s.usr ,";", NULL), 2000, &result, &tail);
+	while(sqlite3_step(result) == SQLITE_ROW){
+		char purchase[2000];
+		itoa(sqlite3_column_int(result, 0), purchase, 10);
+		printf("Purchase: %s<br>", purchase);
+		sqlite3_stmt * result2;
+		const char * tail2;
+		prepare(conn, strjoin(nullArr, "INSERT INTO temp_purc VALUES(", purchase,");", NULL), 2000, &result2, &tail2);
+		sqlite3_step(result2);
+		sqlite3_finalize(result2);
+	}
+
+	printf("Done with purc");
+
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
 
 }

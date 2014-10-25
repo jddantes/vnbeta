@@ -59,7 +59,7 @@ char * loadItems(char * dump){
 		char itemPrice[50];
 		strcpy(itemName, sqlite3_column_text(result, 1));
 		itoa(sqlite3_column_int(result, 2), itemPrice, 10);
-		strapp(dump, "<input type='radio' value='", itemName, "' name='", itemName, "' />", itemName, ":", itemPrice, NULL);
+		strapp(dump, "<input type='radio' value='", itemName, "' name='purchase' />", itemName, ":", itemPrice, NULL);
 	}
 	sqlite3_finalize(result);
 	sqlite3_close(conn);

@@ -65,4 +65,71 @@ state_t makeStateFromTriple(char * tripleState){
 	return s;
 }
 
+/*
+	Items
+*/
+
+int getItemPrice(char * name){
+	char nullArr[2000];
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, strjoin(nullArr, "SELECT price FROM items WHERE item_name='", name, "';", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	int price = sqlite3_column_int(result, 0);
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+
+	return price;
+}
+
+char * getItemName(int itemId, char * dest){
+	char nullArr[2000];
+	char nullArr2[2000];
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, strjoin(nullArr, "SELECT item_name FROM items WHERE item_id=", strnum(nullArr2, itemId), ";", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	strcpy(dest, (char *)sqlite3_column_text(result, 0));
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+	return dest;
+}
+
+int getItemId(char * itemName){
+	char nullArr[2000];
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, strjoin(nullArr, "SELECT item_id FROM items WHERE item_name='", itemName, "';", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	int id = sqlite3_column_int(result, 0);
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+	return id;
+}
+
+int tempWallet(){
+	char nullArr[2000];
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, strjoin(nullArr, "SELECT money FROM temp_money;", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	int money = sqlite3_column_int(result, 0);
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+	printf("tempwallet: %d<br>", money);
+	return money;
+}
+
 #endif

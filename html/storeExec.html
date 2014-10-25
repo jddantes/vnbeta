@@ -1,0 +1,21 @@
+<html>
+<head>
+	<title>VN! - Store Purchase</title>
+	<style type="text/css">
+		body{
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<h2>Purchase Status</h2>
+
+	{%purchaseStatus%}
+
+	<form action="store.cgi" method="POST">
+		<input type="hidden" name="currentState" value="{%currentState%}" />
+		<input type="hidden" name="wallet" value="{%wallet%}" />
+		<input type="submit" value="Store" />
+	</form>
+</body>
+</html>

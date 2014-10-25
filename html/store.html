@@ -14,7 +14,8 @@
 		<form action="storeExec.cgi" method="POST">
 			{% inventory %}		
 			<input type="submit" value="Buy">
-			<input type="hidden" value="{% currentState %}"/>
+			<input type="hidden" name="wallet" value="{%wallet%}" />
+			<input type="hidden" name="currentState" value="{% currentState %}"/>
 		</form>
 	</div>
 

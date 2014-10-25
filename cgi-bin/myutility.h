@@ -180,6 +180,11 @@ char * strappNum(char * dest, int num){
 	return strapp(dest, num_str, NULL);
 }
 
+char * strnum(char * dest, int num){
+	itoa(num, dest, 10);
+	return dest;
+}
+
 /*
 	sqlite3_prepare_v2 with error check
 */

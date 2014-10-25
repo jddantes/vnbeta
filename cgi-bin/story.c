@@ -15,6 +15,11 @@ void credits();
 void temp_money();
 void temp_purc();
 void initializeTemp();
+void stoCheck();
+int isSto();
+void stoMark();
+void loadOwned();
+int hasItem(char * nameItem);
 
 
 char nullArr[MAX_STR_SIZE];
@@ -26,6 +31,7 @@ int numChoices = 0;
 
 strMap postData;
 strMap detailsMap;
+strMap ownedMap;
 
 int i;
 char usr[2000];
@@ -55,7 +61,7 @@ int main(){
 
 		if(!strlen(scene)){
 			strcpy(scene, DEFAULT_SCENE);
-		} else if (!strcmp(scene, END_SCENE)){
+		} else if (!strcmp(scene, END_SCENE) || !strcmp(scene, "END")){
 			credits();
 		}
 
@@ -80,6 +86,7 @@ int main(){
 
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
 			mapUpdate(&detailsMap, "state", mapVal(&detailsMap, "nextScene"));
+			stoCheck();
 		}
 
 		// Process choices 
@@ -219,4 +226,81 @@ void temp_purc(){
 	sqlite3_finalize(result);
 	sqlite3_close(conn);
 
+}
+
+void stoCheck(){
+	if(isSto()){
+		stoMark();
+	}
+}
+
+int isSto(){
+	state_t s = makeStateFromTriple(mapVal(&detailsMap, "nextScene"));
+	char nullArr2[2000];
+	char ext[2000];
+	split(s.scene, nullArr2, ext, ".");
+	if(!strcmp(ext, "sto")){
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+void stoMark(){
+	printf("Auto branching<br>");
+	state_t s = makeStateFromTriple(mapVal(&detailsMap, "nextScene"));
+	char nullArr2[2000];
+	FILE * fp = mopen(strjoin(nullArr2, SCENEPATH, "/", s.scene, NULL), "r");
+
+	char buffer[2000];
+	while(mgets(buffer, 2000, fp)!=NULL){
+		printf("%s", buffer);
+		if(!strcmp(buffer, "-----")){
+			break;
+		}
+	}
+	loadOwned();
+	printf("Getting the branches<br>");
+	while(mgets(buffer, 2000, fp)!=NULL){
+		char itemName[2000];
+		char branch[2000];
+		split(buffer, itemName, branch, ":");
+		printf("Buffer: %s<br>", buffer);
+		if(hasItem(itemName)){
+			printf("Has %s, branching to %s<br>", itemName, branch);
+
+			mapUpdate(&detailsMap, "state", strjoin(nullArr2, s.usr, ":", branch, ",0",NULL));
+			break;
+		} else if(!strcmp(itemName, "DEFAULT")){
+			printf("Default: %s<br>", branch);
+			mapUpdate(&detailsMap, "state", strjoin(nullArr2, s.usr, ":", branch, ",0",NULL));
+		}
+
+	}
+
+	fclose(fp);
+}
+
+void loadOwned(){
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+	prepare(conn, strjoin(nullArr, "SELECT item_id from temp_purc;", NULL), 2000, &result, &tail);
+
+	while(sqlite3_step(result) == SQLITE_ROW){
+		mapAdd(&ownedMap, getItemName(sqlite3_column_int(result, 0), nullArr) , "");
+	}
+
+	sqlite3_finalize(result);
+	sqlite3_close(conn);
+}
+
+int hasItem(char * itemName){
+	if(mapFind(&ownedMap, itemName) != NULL){
+		return 1;
+	} else {
+		return 0;
+	}
 }

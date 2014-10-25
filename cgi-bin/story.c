@@ -204,15 +204,12 @@ void temp_purc(){
 	while(sqlite3_step(result) == SQLITE_ROW){
 		char purchase[2000];
 		itoa(sqlite3_column_int(result, 0), purchase, 10);
-		printf("Purchase: %s<br>", purchase);
 		sqlite3_stmt * result2;
 		const char * tail2;
 		prepare(conn, strjoin(nullArr, "INSERT INTO temp_purc VALUES(", purchase,");", NULL), 2000, &result2, &tail2);
 		sqlite3_step(result2);
 		sqlite3_finalize(result2);
 	}
-
-	printf("Done with purc");
 
 	sqlite3_finalize(result);
 	sqlite3_close(conn);

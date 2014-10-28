@@ -9,7 +9,7 @@
 </head>
 <body>
 	<form action="story.cgi" method="POST">
-		
+
 		<div class="choiceList">
 			{%choiceList%}
 		</div>
@@ -41,6 +41,9 @@
 		<input type="hidden" name="wallet" value="{%wallet%}" />
 		<input type="submit" value="Store" />
 	</form>
+
+	<input type="hidden" id="bg" value="{%bg%}" />
+	<input type="hidden" id="speaker_img" value="{%speaker_img%}" />
 
 </body>
 </html>

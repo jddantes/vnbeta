@@ -16,6 +16,7 @@ void saveMoney();
 void saveItems();
 void flushItems(char * usr);
 void saveTempItems();
+void saveTime();
 
 int main(){
 	printf("Content-type:text/html\n\n");
@@ -67,6 +68,7 @@ int main(){
 void save(){
 	saveMoney();
 	saveItems();
+	saveTime();
 }
 
 void saveMoney(){	
@@ -127,5 +129,23 @@ void saveTempItems(){
 		sqlite3_finalize(result2);
 	}
 	sqlite3_finalize(result);
+	sqlite3_close(conn);
+}
+
+void saveTime(){
+	char nullArr[2000];
+	char nullArr2[2000];
+
+	state_t s = makeStateFromTriple(mapVal(&detailsMap, "state"));
+
+	sqlite3 * conn;
+	sqlite3_stmt * result;
+	const char * tail;
+	sql_open(DBPATH, &conn);
+
+	prepare(conn, strjoin(nullArr, "UPDATE slots SET timestr='", getCurrentTime(nullArr2), "' WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
+	sqlite3_step(result);
+	sqlite3_finalize(result);
+
 	sqlite3_close(conn);
 }

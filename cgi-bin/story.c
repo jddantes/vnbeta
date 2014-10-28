@@ -82,6 +82,7 @@ int main(){
 		// Process normal dialogues
 		mapAdd(&detailsMap, "speaker", dialogues[d_index].speaker);
 		mapAdd(&detailsMap, "speech", dialogues[d_index].speech);
+		mapAdd(&detailsMap, "speaker_img", strjoin(nullArr, SPKRPATH, "/", dialogues[d_index].speaker, ".jpg", NULL));
 		mapAdd(&detailsMap, "state", makeTriple(nullArr, usr, scene, d_index+1));
 
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
@@ -124,6 +125,25 @@ void loadScene(char * scene){
 		if(!strlen(buffer)){
 			continue;
 		}
+		char action[2000] = {};
+		int len = strlen(buffer);
+		if(buffer[0] == '[' && buffer[len-1] == ']'){
+			strcpy(action, buffer+1);
+			len -= 2;
+			action[len] = 0;
+		}
+		char endMarker[2000];
+		strjoin(endMarker, "[/", action, "]", NULL);
+
+		while(mgets(buffer, 2000, fp) != NULL){
+			if(!strlen(buffer)){
+				continue;
+			}
+			if(!strcmp(buffer, endMarker)){
+				break;
+			}
+			handle(action, buffer);
+		}
 	}
 
 	while(mgets(buffer, 2000,fp)!=NULL){
@@ -142,7 +162,7 @@ void loadScene(char * scene){
 		strjoin(endMarker, "[/", action, "]", NULL);
 
 		while(mgets(buffer, 2000, fp) != NULL){
-				if(!strlen(buffer)){
+			if(!strlen(buffer)){
 				continue;
 			}
 			if(!strcmp(buffer, endMarker)){
@@ -168,6 +188,8 @@ void handle(char * action, char * buffer){
 	} else if(!strcmp(action, "c")){
 		split(buffer, choices[numChoices].branch, choices[numChoices].speech, ":");
 		numChoices++;
+	} else if(!strcmp(action, "bg")){
+		mapAdd(&detailsMap, "bg", strjoin(nullArr, BGPATH, "/", buffer, NULL));
 	}
 
 }

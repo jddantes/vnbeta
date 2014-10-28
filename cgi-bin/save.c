@@ -26,8 +26,6 @@ int main(){
 		makePostMap(&postData, buffer);
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
 		mapAdd(&detailsMap, "wallet", mapVal(&postData, "wallet"));
-		
-		printMap(&postData);
 
 		loadSlotData();
 		char filepath[2000];
@@ -37,10 +35,6 @@ int main(){
 
 	
 	}
-
-
-
-	
 
 	return 0;
 }

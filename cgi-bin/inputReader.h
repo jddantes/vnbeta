@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mytypes.h"
-#include "strMap.h"
 #include "myutility.h"
 
 void readInput(FILE * fp, FILE * output, strMap * map);

@@ -6,29 +6,65 @@
 			text-align: center;
 		}
 	</style>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+
+			if(!$("input:radio[name='state']").is(":checked")){
+				$('.choiceList input').first().trigger("click");
+			}
+			if($('.choiceList input').val() == undefined){
+				$('.choiceList').css({"display":"none"});
+			} else {
+				$('.dialogue').css({"display":"none"});
+			}
+
+			if($('#bg').val().length){
+				$('#canvas').css({"background-image":"url("+$('#bg').val()+")"});
+			} else { // Set default bg
+
+			}
+
+			if($('#speaker_img').val().length){
+				$('.speaker_img img').attr({"src":$('#speaker_img').val()});
+			} else {
+				$('.speaker_img').css({"display":"none"});
+			}
+
+		});
+	</script>
+
 </head>
 <body>
-	<form action="story.cgi" method="POST">
+	<div id="canvas">
+		<form action="story.cgi" method="POST">
 
-		<div class="choiceList">
-			{%choiceList%}
-		</div>
-
-		<div class="dialogue">
-
-			<div class="speaker">
-				{% speaker %}
+			<div class="choiceList">
+				{%choiceList%}
 			</div>
-			<div class="speech">
-				{% speech %}
-			</div>
-		</div>
 
-		<input type="hidden" name="state" value="{%state%}" />
-		<input type="hidden" name="d_index" value="{%d_index%}" />
-		<input type="hidden" name="wallet" value="{%wallet%}" />
-		<input type="submit" value="Proceed" />
-	</form>
+			<div class="dialogue">
+				<div class="speaker_img">
+					<img src='' />
+				</div>
+				
+				<div class="dialogue_box">
+					<div class="speaker">
+						{% speaker %}
+					</div>
+					<div class="speech">
+						{% speech %}
+					</div>
+				</div>
+			</div>
+
+			<input type="hidden" name="state" value="{%state%}" />
+			<input type="hidden" name="d_index" value="{%d_index%}" />
+			<input type="hidden" name="wallet" value="{%wallet%}" />
+			<input type="submit" value="Proceed" />
+		</form>
+	</div>
 
 	<form action="save.cgi" method="POST">
 		<input type="hidden" name="currentState" value="{%currentState%}" />

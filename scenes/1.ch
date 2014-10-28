@@ -1,6 +1,9 @@
 [#]
 Choice 1, just after 1.vn
 [/#]
+[bg]
+uvle.jpg
+[/bg]
 -----
 [c]
 1.chp:Eating

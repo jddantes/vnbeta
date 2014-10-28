@@ -49,7 +49,6 @@ int main(){
 		char sqlQuery[2000];
 		strjoin(sqlQuery, "UPDATE slots SET dialogue=", newState.d_str, ", scene='", newState.scene, "' WHERE usr_id=", newState.usr, ";", NULL);
 		
-		printf("Sqlquery: %s", sqlQuery);
 		prepare(conn, sqlQuery, 2000, &result, &tail);
 		sqlite3_step(result);
 		sqlite3_finalize(result);

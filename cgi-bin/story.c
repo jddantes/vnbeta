@@ -3,10 +3,7 @@
 #include <stdlib.h>
 #include <sqlite3.h>
 #include "macros.h"
-#include "myutility.h"
-#include "mytypes.h"
 #include "inputReader.h"
-#include "strMap.h"
 #include "vnutil.h"
 
 void loadScene(char * scene);
@@ -66,12 +63,10 @@ int main(){
 		}
 
 		if(mapVal(&postData, "wallet") == NULL){;
-			printf("No wallet. Initializing temp.<br>");
 			initializeTemp();
 		} else {
 			char nullArr2[2000];
 			mapUpdate(&detailsMap, "wallet", strnum(nullArr2, tempWallet()));
-			printf("Updating wallet to %s<br>\n", strnum(nullArr2, tempWallet())); 
 		}
 
 		int d_index = atoi(d_str);
@@ -82,7 +77,7 @@ int main(){
 		// Process normal dialogues
 		mapAdd(&detailsMap, "speaker", dialogues[d_index].speaker);
 		mapAdd(&detailsMap, "speech", dialogues[d_index].speech);
-		mapAdd(&detailsMap, "speaker_img", strjoin(nullArr, SPKRPATH, "/", dialogues[d_index].speaker, ".jpg", NULL));
+		mapAdd(&detailsMap, "speaker_img", strjoin(nullArr, SPKRPATH, "/", dialogues[d_index].speaker, ".png", NULL));
 		mapAdd(&detailsMap, "state", makeTriple(nullArr, usr, scene, d_index+1));
 
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
@@ -102,7 +97,6 @@ int main(){
 		strjoin(htmlpath, HTMLPATH, "/story.html", NULL);
 		render(htmlpath, &detailsMap);
 
-		printMap(&detailsMap);
 	}
 
 	return 0;
@@ -183,13 +177,14 @@ void handle(char * action, char * buffer){
 		split(buffer, dialogues[numDialogues].speaker, dialogues[numDialogues].speech, ":");
 		numDialogues++;
 	} else if(!strcmp(action, "b")) { // Branch to scene
-		// printf("<br>branch: %s<br>", buffer);
 		mapAdd(&detailsMap, "nextScene", strjoin(nullArr, usr, ":", buffer, ",0", NULL));
 	} else if(!strcmp(action, "c")){
 		split(buffer, choices[numChoices].branch, choices[numChoices].speech, ":");
 		numChoices++;
 	} else if(!strcmp(action, "bg")){
-		mapAdd(&detailsMap, "bg", strjoin(nullArr, BGPATH, "/", buffer, NULL));
+		if(strlen(buffer)){
+			mapAdd(&detailsMap, "bg", strjoin(nullArr, BGPATH, "/", buffer, NULL));
+		}
 	}
 
 }
@@ -275,32 +270,25 @@ int isSto(){
 }
 
 void stoMark(){
-	printf("Auto branching<br>");
 	state_t s = makeStateFromTriple(mapVal(&detailsMap, "nextScene"));
 	char nullArr2[2000];
 	FILE * fp = mopen(strjoin(nullArr2, SCENEPATH, "/", s.scene, NULL), "r");
 
 	char buffer[2000];
 	while(mgets(buffer, 2000, fp)!=NULL){
-		printf("%s", buffer);
 		if(!strcmp(buffer, "-----")){
 			break;
 		}
 	}
 	loadOwned();
-	printf("Getting the branches<br>");
 	while(mgets(buffer, 2000, fp)!=NULL){
 		char itemName[2000];
 		char branch[2000];
 		split(buffer, itemName, branch, ":");
-		printf("Buffer: %s<br>", buffer);
 		if(hasItem(itemName)){
-			printf("Has %s, branching to %s<br>", itemName, branch);
-
 			mapUpdate(&detailsMap, "state", strjoin(nullArr2, s.usr, ":", branch, ",0",NULL));
 			break;
 		} else if(!strcmp(itemName, "DEFAULT")){
-			printf("Default: %s<br>", branch);
 			mapUpdate(&detailsMap, "state", strjoin(nullArr2, s.usr, ":", branch, ",0",NULL));
 		}
 

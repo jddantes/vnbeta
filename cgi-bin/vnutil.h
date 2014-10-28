@@ -129,7 +129,6 @@ int tempWallet(){
 	int money = sqlite3_column_int(result, 0);
 	sqlite3_finalize(result);
 	sqlite3_close(conn);
-	printf("tempwallet: %d<br>", money);
 	return money;
 }
 
@@ -141,6 +140,5 @@ char * getCurrentTime(char * str){
 
 	return str;
 }
-
 
 #endif

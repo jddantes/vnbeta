@@ -13,7 +13,7 @@
 	<div class="inventory_dump">
 		<form action="storeExec.cgi" method="POST">
 			{% inventory %}		
-			<input type="submit" value="Buy">
+			<input type="submit" value="Buy">	
 			<input type="hidden" name="wallet" value="{%wallet%}" />
 			<input type="hidden" name="currentState" value="{% currentState %}"/>
 		</form>

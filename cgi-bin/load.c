@@ -19,7 +19,6 @@ int main(){
 	char filepath[2000] = {};
 	strjoin(filepath, HTMLPATH, "/load.html", NULL);
 	render(filepath, &detailsMap);
-	printMap(&detailsMap);
 
 	return 0;
 }

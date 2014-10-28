@@ -5,26 +5,130 @@
 		body{
 			text-align: center;
 		}
+		.slotDiv{
+			width: 300px;
+			margin: 0 auto;
+			padding: 10px;
+		}
+		.slotDiv div{
+			display: inline-block;
+			vertical-align: middle;
+			height: 50px;
+			line-height: 50px;
+		}
+		.slotLabel{
+			font-size: 22px;
+		}
+		.slotButton{
+		
+		}
+		.slotButton input{
+			margin-top: 14px;
+			width: 22px;
+			height: 22px;
+		}
 	</style>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if(!$("input:radio[name='state']").is(":checked")){
+				$('.form input').first().trigger("click");
+			}
+		});
+	</script>
 </head>
 <body>
 
 	<h2>Save to which slot?</h2>
 
-	<form action="saveExec.cgi" method="POST">
-			<input type="radio" name="state" value="{%state1%}"/>{%time1%}<br/>
-			<input type="radio" name="state" value="{% state2 %}"/>{% time2 %}<br/>
-			<input type="radio" name="state" value="{%state3%}"/>{%time3%}<br/>
-			<input type="radio" name="state" value="{%state4%}"/>{%time4%}<br/>
-			<input type="radio" name="state" value="{%state5%}"/>{%time5%}<br/>
-			<input type="radio" name="state" value="{%state6%}"/>{%time6%}<br/>
-			<input type="radio" name="state" value="{%state7%}"/>{%time7%}<br/>
-			<input type="radio" name="state" value="{%state8%}"/>{%time8%}<br/>
-			<input type="radio" name="state" value="{%state9%}"/>{%time9%}<br/>
-			<input type="radio" name="state" value="{%state10%}"/>{%time10%}<br/>
-			<button type="submit" value="save">Save</button>		
-			<input type="hidden" name="currentState" value="{%currentState%}" />	
-			<input type="hidden" name="wallet" value="{%wallet%}" />		
-	</form>
+	<div class="form">
+		<form action="saveExec.cgi" method="POST">
+
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time1%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state1%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time2%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state2%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time3%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state3%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time4%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state4%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time5%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state5%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time6%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state6%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time7%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state7%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time8%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state8%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time9%}
+					</div>
+					<div class="slotButton">
+							<input type="radio" name="state" value="{%state9%}"/><br/>
+					</div>
+				</div>
+				<div class="slotDiv">
+					<div class="slotLabel">
+						{%time10%}
+					</div>
+					<div class="slotButton">
+						<input type="radio" name="state" value="{%state10%}"/><br/>
+					</div>
+				</div>
+
+				<button type="submit" value="save">Save</button>		
+				<input type="hidden" name="currentState" value="{%currentState%}" />	
+				<input type="hidden" name="wallet" value="{%wallet%}" />	
+		</form>
+	</div>
 </body>
 </html>

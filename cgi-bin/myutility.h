@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <sqlite3.h>
 #include "mytypes.h"
-#include "strmap.h"
+#include "strMap.h"
 
 /*
 	originally error or abort, but both are commonly used so I went with terminate, or term for short

@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>VN! - Save Game</title>
+	<title>VN! - Load Game</title>
 	<style type="text/css">
 		body{
 			text-align: center;
@@ -39,10 +39,10 @@
 </head>
 <body>
 
-	<h2>Save to which slot?</h2>
+	<h2>Choose which scene to load</h2>
 
 	<div class="form">
-		<form action="saveExec.cgi" method="POST">
+		<form action="story.cgi" method="POST">
 
 				<div class="slotDiv">
 					<div class="slotLabel">
@@ -124,17 +124,14 @@
 						<input type="radio" name="state" value="{%state10%}"/><br/>
 					</div>
 				</div>
-
-				<button type="submit" value="save">Save</button>		
-				<input type="hidden" name="currentState" value="{%currentState%}" />	
-				<input type="hidden" name="wallet" value="{%wallet%}" />	
-		</form>
-
-		<form action="story.cgi" method="POST">
-			<input type="hidden" name="state" value="{% currentState %}" />
-			<input type="hidden" name="wallet" value="{%wallet%}" />
-			<input type="submit" value="Go back" />
+				<button type="submit" value="load" name="mode">Load</button>
 		</form>
 	</div>
+
+	<form action="story.cgi" method="POST">
+		<input type="hidden" name="state" value="{% currentState %}" />
+		<input type="hidden" name="wallet" value="{%wallet%}" />
+		<input type="submit" value="Go back" />
+	</form>
 </body>
 </html>

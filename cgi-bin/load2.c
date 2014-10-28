@@ -7,16 +7,31 @@
 #include "inputReader.h"
 #include "vnutil.h"
 
+strMap postData;
 strMap detailsMap;
 
 void loadSlotData();
 
 int main(){
 	printf("Content-type:text/html\n\n");
-	loadSlotData(); 
-	char filepath[2000] = {};
-	strjoin(filepath, HTMLPATH, "/load.html", NULL);
-	render(filepath, &detailsMap);
+
+	char * data = getenv("CONTENT_LENGTH");
+	if(!strlen(data)){
+		term("Return to the homepage");
+	}  else {
+		char buffer[2000];
+		fgets(buffer, 2000, stdin);
+		makePostMap(&postData, buffer);
+		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
+		mapAdd(&detailsMap, "wallet", mapVal(&postData, "wallet"));
+
+		loadSlotData();
+		char filepath[2000];
+		strjoin(filepath, HTMLPATH, "/load2.html", NULL);
+		render(filepath, &detailsMap);
+	}
+
+	
 
 	return 0;
 }

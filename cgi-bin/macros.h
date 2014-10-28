@@ -9,6 +9,7 @@
 #define DBPATH "D:/xampp/cgi-bin/EEE13/MP1Test/db.db"
 #define DBNAME "db.db"
 
+#define DEFAULT_MONEY 100
 #define NUM_SLOTS 10
 #define DEBUG 0
 

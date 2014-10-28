@@ -212,12 +212,18 @@ void temp_money(){
 	sqlite3_finalize(result);
 
 	state_t s = makeStateFromTriple(mapVal(&postData, "state"));
-	prepare(conn, strjoin(nullArr, "SELECT money FROM slots WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
-	sqlite3_step(result);
 	char wallet_str[2000];
-	itoa(sqlite3_column_int(result, 0), wallet_str, 10);
-	mapAdd(&detailsMap, "wallet", wallet_str);
-	sqlite3_finalize(result);
+	if(atoi(s.usr)){
+		prepare(conn, strjoin(nullArr, "SELECT money FROM slots WHERE usr_id=", s.usr, ";", NULL), 2000, &result, &tail);
+		sqlite3_step(result);
+		itoa(sqlite3_column_int(result, 0), wallet_str, 10);
+		mapAdd(&detailsMap, "wallet", wallet_str);
+		sqlite3_finalize(result);
+	} else {
+		itoa(DEFAULT_MONEY, wallet_str, 10);
+		mapAdd(&detailsMap, "wallet", wallet_str);
+	}
+	
 
 	prepare(conn, strjoin(nullArr, "INSERT INTO temp_money VALUES(", mapVal(&detailsMap, "wallet"), ");", NULL), 2000, &result, &tail);
 	sqlite3_step(result);

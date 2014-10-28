@@ -45,8 +45,7 @@ void loadSlotData(){
 		mapAdd(&detailsMap, strappNum(_state, i+1), tripleState);
 
 		char _timestr[2000] = "time";
-		char nullArr[2000];
-		mapAdd(&detailsMap, strappNum(_timestr, i+1), extractTime(nullArr));
+		mapAdd(&detailsMap, strappNum(_timestr, i+1), (char *)sqlite3_column_text(result, 4));
 
 		i++;
 	}

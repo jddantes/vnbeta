@@ -133,7 +133,7 @@ int tempWallet(){
 	return money;
 }
 
-char * extractTime(char * str){
+char * getCurrentTime(char * str){
 	time_t rawtime = time(NULL);
 	struct tm * timeinfo = localtime(&rawtime);
 
@@ -141,5 +141,6 @@ char * extractTime(char * str){
 
 	return str;
 }
+
 
 #endif

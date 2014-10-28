@@ -77,7 +77,9 @@ int main(){
 		// Process normal dialogues
 		mapAdd(&detailsMap, "speaker", dialogues[d_index].speaker);
 		mapAdd(&detailsMap, "speech", dialogues[d_index].speech);
-		mapAdd(&detailsMap, "speaker_img", strjoin(nullArr, SPKRPATH, "/", dialogues[d_index].speaker, ".png", NULL));
+		if(strlen(dialogues[d_index].speaker)){
+			mapAdd(&detailsMap, "speaker_img", strjoin(nullArr, SPKRPATH, "/", dialogues[d_index].speaker, ".png", NULL));
+		} 
 		mapAdd(&detailsMap, "state", makeTriple(nullArr, usr, scene, d_index+1));
 
 		if(d_index == numDialogues-1){ // Branch to scene instead of branching to
@@ -184,7 +186,7 @@ void handle(char * action, char * buffer){
 	} else if(!strcmp(action, "bg")){
 		if(strlen(buffer)){
 			mapAdd(&detailsMap, "bg", strjoin(nullArr, BGPATH, "/", buffer, NULL));
-		}
+		} 
 	}
 
 }

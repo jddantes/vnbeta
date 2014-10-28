@@ -35,8 +35,6 @@ int main(){
 		mapAdd(&detailsMap, "currentState", mapVal(&postData, "currentState"));
 		mapAdd(&detailsMap, "wallet", mapVal(&postData, "wallet"));
 
-		printMap(&ownedMap);
-
 		render(strjoin(nullArr, HTMLPATH, "/storeExec.html", NULL), &detailsMap);
 
 	}

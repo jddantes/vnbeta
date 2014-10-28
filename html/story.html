@@ -26,10 +26,10 @@
 
 			}
 
-			if($('#speaker_img').val().length){
-				$('.speaker_img img').attr({"src":$('#speaker_img').val()});
-			} else {
+			if(!$('#hidden_speaker').val().length){ // Narrator
 				$('.speaker_img').css({"display":"none"});
+			} else {
+				$('.speaker_img img').attr({"src":$('#speaker_img').val()});
 			}
 
 		});
@@ -80,6 +80,7 @@
 
 	<input type="hidden" id="bg" value="{%bg%}" />
 	<input type="hidden" id="speaker_img" value="{%speaker_img%}" />
+	<input type="hidden" id="hidden_speaker" value="{%speaker%}" />
 
 </body>
 </html>

@@ -58,6 +58,10 @@ char * loadItems(char * dump){
 		strcpy(itemName, sqlite3_column_text(result, 1));
 		itoa(sqlite3_column_int(result, 2), itemPrice, 10);
 		strapp(dump, "<input type='radio' value='", itemName, "' name='purchase' />", itemName, ":", itemPrice, NULL);
+
+		char nullArr2[2000];
+		mapApp(&detailsMap, "hiddenInventory",  strjoin(nullArr2, "<input type='hidden' class='hiddenInventory' value='", itemName, ":", itemPrice, "' />\n", NULL) );
+
 	}
 	sqlite3_finalize(result);
 	sqlite3_close(conn);

@@ -4,6 +4,7 @@
 #include "myutility.h"
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 void readTriple(char * tripleState, char * usr, char * scene, char * d_str){
 	char scene_d[2000];
@@ -130,6 +131,15 @@ int tempWallet(){
 	sqlite3_close(conn);
 	printf("tempwallet: %d<br>", money);
 	return money;
+}
+
+char * extractTime(char * str){
+	time_t rawtime = time(NULL);
+	struct tm * timeinfo = localtime(&rawtime);
+
+	strftime(str, 2000, "%x %X", timeinfo);
+
+	return str;
 }
 
 #endif

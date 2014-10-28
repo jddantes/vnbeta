@@ -44,6 +44,10 @@ void loadSlotData(){
 		char _state[2000] = "state";
 		mapAdd(&detailsMap, strappNum(_state, i+1), tripleState);
 
+		char _timestr[2000] = "time";
+		char nullArr[2000];
+		mapAdd(&detailsMap, strappNum(_timestr, i+1), extractTime(nullArr));
+
 		i++;
 	}
 

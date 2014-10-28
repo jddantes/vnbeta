@@ -121,10 +121,13 @@ void loadScene(char * scene){
 		if(!strcmp(buffer, "-----")){
 			break;
 		}
+		if(!strlen(buffer)){
+			continue;
+		}
 	}
 
 	while(mgets(buffer, 2000,fp)!=NULL){
-		if(buffer[0] == 0){
+		if(!strlen(buffer)){
 			continue;
 		}
 
@@ -139,6 +142,9 @@ void loadScene(char * scene){
 		strjoin(endMarker, "[/", action, "]", NULL);
 
 		while(mgets(buffer, 2000, fp) != NULL){
+				if(!strlen(buffer)){
+				continue;
+			}
 			if(!strcmp(buffer, endMarker)){
 				break;
 			}

@@ -96,11 +96,8 @@ void buy(char * itemName){
 	sqlite3_finalize(result);
 
 	int moneyLeft = tempWallet() - getItemPrice(itemName);
-	printf("tempWallet returns %d<br>", tempWallet());
-	printf("price of item is %d<br>", getItemPrice(itemName));
 	prepare(conn, strjoin(nullArr, "UPDATE temp_money set money=", strnum(nullArr2, moneyLeft)  ,";", NULL), 2000, &result, &tail);
 	sqlite3_step(result);
-	printf("You have %d money left<br>\n", moneyLeft); 
 	mapUpdate(&detailsMap, "wallet", strnum(nullArr2, moneyLeft));
 	sqlite3_finalize(result);
 	sqlite3_close(conn);

@@ -190,7 +190,8 @@ void handle(char * action, char * buffer){
 }
 
 void credits(){
-	printf("<html><body>You've reached the end!</body></html>");
+	// printf("<html><body>You've reached the end!</body></html>");
+	render(strjoin(nullArr, HTMLPATH, "/end.html", NULL), &detailsMap);
 	exit(0);
 
 }

@@ -6,11 +6,19 @@
 			text-align: center;
 		}
 	</style>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if(!$("input:radio[name='purchase']").is(":checked")){
+				$('.store input').first().trigger("click");
+			}
+		});
+	</script>
 </head>
 <body>
 	<h2>Store</h2>
-	<div class="wallet">{%wallet%}</div>
-	<div class="inventory_dump">
+	<div class="wallet">Wallet: {%wallet%}</div>
+	<div class="store">
 		<form action="storeExec.cgi" method="POST">
 			{% inventory %}		
 			<input type="submit" value="Buy">	

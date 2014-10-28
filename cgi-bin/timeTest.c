@@ -6,7 +6,7 @@ char * extractTime(char * str){
 	time_t rawtime = time(NULL);
 	struct tm * timeinfo = localtime(&rawtime);
 
-	strftime(str, 2000, "%x %X", timeinfo);
+	strftime(str, 2000, "%Y-%m-%d %X", timeinfo);
 
 	return str;
 }
